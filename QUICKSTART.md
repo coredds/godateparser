@@ -175,14 +175,32 @@ go test -bench=. -run=XXX
 
 ## Running Examples
 
-```bash
-# Run the example application
-go run examples/main.go
+### Basic Examples
 
-# Or build and run
-go build -o example examples/main.go
-./example
+```bash
+# Run the basic example application
+go run -tags examples examples/main.go
 ```
+
+### Production Integration Examples
+
+The library includes complete, production-ready integration examples:
+
+```bash
+# Web scraping example
+go run -tags examples examples/web_scraper.go
+
+# Log parsing example
+go run -tags examples examples/log_parser.go
+
+# REST API server example
+go run -tags examples examples/rest_api.go
+
+# CLI tool example
+go run -tags examples examples/cli_tool.go
+```
+
+Each example demonstrates real-world usage patterns and best practices.
 
 ## Multi-Language Support
 
@@ -249,9 +267,15 @@ godateparser.ParseDate("3 y cuarto", settings)          // 3:15
 
 ## Next Steps
 
-- Read the full [README.md](README.md) for complete documentation and Spanish examples
+- Read the full [README.md](README.md) for complete documentation
+- Explore production examples in the `examples/` directory:
+  - Web scraping integration
+  - Log parsing
+  - REST API server
+  - CLI tool
+- Review [LANGUAGE_EXAMPLES.md](LANGUAGE_EXAMPLES.md) for all 10 supported languages
 - Check the `translations/` package to see how language support is implemented
-- Review [CHANGELOG.md](CHANGELOG.md) for v1.3.1 Portuguese language support and improvements
+- Review [CHANGELOG.md](CHANGELOG.md) for version history and improvements
 
 ## Getting Help
 

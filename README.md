@@ -347,12 +347,86 @@ type ParsedDate struct {
 - Unix seconds: `1609459200`
 - Unix milliseconds: `1609459200000`
 
+## Integration Examples
+
+The `examples/` directory contains complete, production-ready integration examples:
+
+### Web Scraping (`examples/web_scraper.go`)
+Extract dates from scraped web content with support for:
+- Multiple date formats in HTML
+- Event filtering by date range
+- Multi-language content parsing
+- Date grouping and analysis
+
+```go
+dates, err := godateparser.ExtractDates(htmlContent, settings)
+for _, d := range dates {
+    fmt.Printf("Event: %s on %s\n", d.MatchedText, d.Date.Format("2006-01-02"))
+}
+```
+
+### Log Parsing (`examples/log_parser.go`)
+Parse dates from various log formats including:
+- Apache/Nginx logs
+- Syslog format
+- JSON logs
+- Application logs
+- Streaming log processing
+
+```go
+// Parse timestamp from log entry
+dates, _ := godateparser.ExtractDates(logLine, nil)
+timestamp := dates[0].Date
+```
+
+### REST API (`examples/rest_api.go`)
+Full HTTP API server with endpoints:
+- `POST /parse` - Parse single date strings
+- `POST /extract` - Extract dates from text
+- `GET /health` - Health check
+
+```bash
+curl -X POST http://localhost:8080/parse \
+  -H "Content-Type: application/json" \
+  -d '{"date_string":"December 31, 2024"}'
+```
+
+### CLI Tool (`examples/cli_tool.go`)
+Command-line date parser with features:
+- Interactive mode
+- Multiple output formats
+- Language selection
+- Stdin/stdout support
+- Shell script integration
+
+```bash
+./cli_tool "December 31, 2024"
+./cli_tool -lang=es "31 diciembre 2024"
+./cli_tool -i  # Interactive mode
+```
+
+Run any example with:
+```bash
+go run -tags examples examples/web_scraper.go
+go run -tags examples examples/log_parser.go
+go run -tags examples examples/rest_api.go
+go run -tags examples examples/cli_tool.go
+```
+
 ## Testing
 
 Run the test suite:
 
 ```bash
 go test -v
+```
+
+Run tests with coverage:
+
+```bash
+go test -cover
+# Main package: 70.2% coverage
+# Translations package: 98.1% coverage
 ```
 
 Run benchmarks:
@@ -363,23 +437,41 @@ go test -bench=. -benchmem
 
 ## Performance
 
-godateparser is optimized for performance with efficient regex patterns and minimal allocations. Benchmark results on typical hardware:
+godateparser provides fast date parsing with minimal allocations. Benchmark results on typical hardware:
 
 ```
-BenchmarkParseDate_ISO-8          500000    2500 ns/op
-BenchmarkParseDate_Relative-8     300000    4000 ns/op
-BenchmarkExtractDates-8           100000   15000 ns/op
+BenchmarkParseDate_ISO8601        294 μs/op    339 KB/op    1624 allocs/op
+BenchmarkParseDate_Relative       249 μs/op    339 KB/op    1626 allocs/op
+BenchmarkParseDate_Timestamp      378 ns/op    376 B/op     6 allocs/op
+BenchmarkParseDate_WithTimezone   215 μs/op    336 KB/op    1587 allocs/op
 ```
+
+Performance characteristics:
+- Timestamp parsing: Sub-microsecond (0.4 μs)
+- Standard date parsing: 200-300 μs
+- Date extraction: Scales linearly with text length
+- Memory efficient: Minimal allocations for timestamps
 
 ## Roadmap
 
-- [ ] Add support for 200+ language locales
-- [ ] Implement language autodetection
-- [ ] Support non-Gregorian calendar systems (Hijri, Jalali)
-- [ ] Add timezone abbreviation parsing
-- [ ] Improve ambiguity detection in strict mode
-- [ ] Add more relative date expressions
-- [ ] Performance optimizations
+### Completed
+- [x] Multi-language support (10 languages)
+- [x] Automatic language detection
+- [x] Timezone abbreviation parsing (30+ timezones)
+- [x] Comprehensive test suite (1400+ tests, 70-98% coverage)
+- [x] Production-ready integration examples
+- [x] Week number support (ISO 8601)
+- [x] Natural time expressions
+- [x] Date range parsing
+
+### Planned
+- [ ] Add support for 200+ language locales (currently: 10)
+- [ ] Support non-Gregorian calendar systems (Hijri, Jalali, Hebrew)
+- [ ] Recurring date patterns (every Monday, bi-weekly)
+- [ ] Fuzzy date matching
+- [ ] Performance optimizations (regex caching)
+- [ ] Duration parsing (2 hours 30 minutes)
+- [ ] Interactive playground (WebAssembly)
 
 ## Multi-Language Support
 
@@ -471,7 +563,9 @@ godateparser.ParseDate("mediodía", settings)        // 12:00 PM
 godateparser.ParseDate("3 y media", settings)       // 3:30
 ```
 
-**📚 For comprehensive examples in all 10 languages, see [LANGUAGE_EXAMPLES.md](LANGUAGE_EXAMPLES.md)**
+For comprehensive examples in all 10 languages, see [LANGUAGE_EXAMPLES.md](LANGUAGE_EXAMPLES.md).
+
+For production integration examples, see the `examples/` directory.
 
 ## Contributing
 

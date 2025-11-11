@@ -11,7 +11,7 @@ import (
 )
 
 // Version is the current version of the godateparser library
-const Version = "1.3.3"
+const Version = "1.3.4"
 
 // Settings defines customizable parsing behavior for date parsing operations.
 type Settings struct {
