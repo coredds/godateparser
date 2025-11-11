@@ -18,7 +18,7 @@ func TestNewRegistry(t *testing.T) {
 	// Should have English registered by default
 	eng := registry.Get("en")
 	if eng == nil {
-		t.Error("NewRegistry() should register English by default")
+		t.Fatal("NewRegistry() should register English by default")
 	}
 
 	if eng.Code != "en" {
@@ -371,9 +371,7 @@ func TestRegistry_SupportedLanguages(t *testing.T) {
 	// Check that Spanish and French are included
 	expected := map[string]bool{"en": true, "es": true, "fr": true}
 	for _, code := range langs {
-		if _, ok := expected[code]; ok {
-			delete(expected, code)
-		}
+		delete(expected, code)
 	}
 
 	if len(expected) > 0 {
